@@ -1,0 +1,11 @@
+<div class="flex">
+  <div class="border border-black grid grid-cols-8">
+    @for(col of board; track $index; let idx = $index) { @for(cell of col; track
+    $index; let idy = $index) {
+    <div
+      [ngClass]="{ 'bg-black': (idy - idx) % 2 === 0 }"
+      class="w-16 h-16 border border-black"
+    ></div>
+    } }
+  </div>
+</div>
