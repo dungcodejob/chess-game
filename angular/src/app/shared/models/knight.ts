@@ -1,10 +1,10 @@
 import { Color } from './color';
 import { Coords } from './coords';
-import { FENChar } from './fen-char';
+import { ChessChar } from './fen-char';
 import { Piece } from './piece';
 
 export class Knight extends Piece {
-  protected _char: FENChar = FENChar.Knight;
+  protected _char: ChessChar = ChessChar.Knight;
   protected _directions: Coords[] = [
     { x: 1, y: 2 },
     { x: 1, y: -2 },
@@ -20,7 +20,7 @@ export class Knight extends Piece {
     super(color);
   }
 
-  protected getMoves(position: Coords): Coords[] {
+  getMoves(position: Coords): Coords[] {
     return this.getStepMoves(position);
   }
 }

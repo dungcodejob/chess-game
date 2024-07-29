@@ -1,8 +1,10 @@
-export enum FENChar {
+export enum ChessChar {
   Pawn = 'P',
-  Knight = 'K',
+  Knight = 'N',
   Bishop = 'B',
   Rook = 'R',
   Queen = 'Q',
   King = 'K',
 }
+
+

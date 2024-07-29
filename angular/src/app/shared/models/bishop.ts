@@ -1,10 +1,10 @@
 import { Color } from './color';
 import { Coords } from './coords';
-import { FENChar } from './fen-char';
+import { ChessChar } from './fen-char';
 import { Piece } from './piece';
 
 export class Bishop extends Piece {
-  protected override _char: FENChar = FENChar.Bishop;
+  protected override _char: ChessChar = ChessChar.Bishop;
   protected override _directions: Coords[] = [
     { x: 1, y: 1 },
     { x: 1, y: -1 },
@@ -16,7 +16,7 @@ export class Bishop extends Piece {
     super(color);
   }
 
-  protected getMoves(position: Coords): Coords[] {
+  getMoves(position: Coords): Coords[] {
     return this.getStraightLineMoves(position);
   }
 }
