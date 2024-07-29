@@ -15,4 +15,8 @@ export class Bishop extends Piece {
   constructor(color: Color) {
     super(color);
   }
+
+  protected getMoves(position: Coords): Coords[] {
+    return this.getStraightLineMoves(position);
+  }
 }
