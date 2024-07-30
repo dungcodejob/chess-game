@@ -1,3 +1,4 @@
+import { Cell } from './cell';
 import { Color } from './color';
 import { Coords } from './coords';
 import { ChessChar } from './fen-char';
@@ -21,10 +22,9 @@ export abstract class Piece {
   protected abstract _char: ChessChar;
   protected abstract _directions: Coords[];
   protected _color: Color;
-  protected _selected = false;
 
-  get selected(): boolean {
-    return this._selected;
+  get color (): Color {
+    return this._color;
   }
   get asset(): string {
     const charName = charNames[this._char];
@@ -36,38 +36,47 @@ export abstract class Piece {
     this._color = color;
   }
 
-  select() {
-    this._selected = true;
-  }
+  abstract getMoves(position: Coords, board: Cell[][]): Coords[];
 
-  unselect() {
-    this._selected = false;
-  }
-
-  abstract getMoves(position: Coords): Coords[];
-
-  protected getStepMoves(position: Coords): Coords[] {
+  protected getStepMoves(position: Coords, board: Cell[][]): Coords[] {
     const moves: Coords[] = [];
 
     for (const direction of this._directions) {
       const moveX = position.x + direction.x;
       const moveY = position.y + direction.y;
-      if (this.isMoveWithinBoard({ x: moveX, y: moveY })) {
-        moves.push({ x: moveX, y: moveY });
+      const isMoveWithinBoard = this.isMoveWithinBoard({
+        x: moveX,
+        y: moveY,
+      });
+      if (isMoveWithinBoard) {
+        const isMoveEmpty = !board[moveX][moveY].piece;
+        if (isMoveEmpty) {
+          moves.push({ x: moveX, y: moveY });
+        }
       }
     }
 
     return moves;
   }
-  protected getStraightLineMoves(position: Coords): Coords[] {
+  protected getStraightLineMoves(position: Coords, board: Cell[][]): Coords[] {
     const moves: Coords[] = [];
 
     for (const direction of this._directions) {
-      for (const index of Array.from(range(0, 7))) {
+      for (const index of Array.from(range(1, 7))) {
         const moveX = position.x + direction.x * index;
         const moveY = position.y + direction.y * index;
-        if (this.isMoveWithinBoard({ x: moveX, y: moveY })) {
-          moves.push({ x: moveX, y: moveY });
+        const isMoveWithinBoard = this.isMoveWithinBoard({
+          x: moveX,
+          y: moveY,
+        });
+
+        if (isMoveWithinBoard) {
+          const isMoveEmpty = !board[moveX][moveY].piece;
+          if (isMoveEmpty) {
+            moves.push({ x: moveX, y: moveY });
+          } else {
+            break;
+          }
         }
       }
     }

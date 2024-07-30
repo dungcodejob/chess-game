@@ -8,10 +8,15 @@
         '!bg-orange-400 outline outline-3 rounded z-10 outline-black-500':
           cell.selected
       }"
-      class="flex items-center justify-center relative w-16 h-16 p-2"
+      class="flex items-center justify-center cursor-pointer relative w-16 h-16 p-2"
+      (click)="onCellClick(cell)"
     >
+      <!-- <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-red-600"
+      >x: {{cell.position.x}}, y: {{cell.position.y}}</div> -->
+
       @if(cell.piece) {
-      <div (click)="onSelect(idx, idy)" class="cursor-pointer w-full h-full">
+      <div class="w-full h-full">
         <img [src]="cell.piece.asset" />
       </div>
 

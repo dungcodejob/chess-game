@@ -1,6 +1,5 @@
 import { NgClass } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit, Type } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   Bishop,
   Cell,
@@ -14,7 +13,7 @@ import {
   Rook,
 } from '@shared/models';
 import { range } from '@shared/models/utils';
-import { BehaviorSubject, pairwise, tap } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-chess-board',
@@ -25,23 +24,77 @@ import { BehaviorSubject, pairwise, tap } from 'rxjs';
 })
 export class ChessBoardComponent implements OnInit {
   private readonly _destroyRef = inject(DestroyRef);
-  private readonly _selectedPositionSubject =
-    new BehaviorSubject<Coords | null>(null);
+  private readonly _selectedCellSubject = new BehaviorSubject<Cell | null>(
+    null
+  );
+  private readonly _turnSubject = new BehaviorSubject<Color>(Color.White);
   board: Cell[][] = [];
 
   ngOnInit(): void {
     this.initializeBoard();
   }
+  onCellClick(nextCell: Cell) {
+    const turn = this._turnSubject.value;
+    const isHandleSelected =
+      nextCell.piece != null && nextCell.piece.color === turn;
+    if (isHandleSelected) {
+      this.select(nextCell);
+      return;
+    }
 
-  onSelect(x: number, y: number) {
-    this._selectedPositionSubject.next({ x, y });
+    const prevCell = this._selectedCellSubject.value;
+    const isHandleMove =
+      prevCell !== null && nextCell.piece === null && nextCell.inMoveRange;
+    if (isHandleMove) {
+      this.move(prevCell, nextCell);
+      this.nextTurn();
+      return;
+    }
+  }
+
+  isOccupied(square: Cell): boolean {
+    return square.piece !== null;
+  }
+
+  isInMoveRange(square: Cell): boolean {
+    return square.inMoveRange;
+  }
+
+  select(selectedCell: Cell): void {
+    const prevCell = this._selectedCellSubject.value;
+    if(prevCell) {
+      prevCell.unselect();
+      this.clearMoveRange(prevCell);
+    }
+    selectedCell.select();
+    this.applyMoveRange(selectedCell);
+    this._selectedCellSubject.next(selectedCell);
+  }
+
+  move(from: Cell, to: Cell): void {
+    from.unselect();
+    this.clearMoveRange(from);
+    const piece = from.piece;
+    from.piece = null;
+    to.piece = piece;
+  }
+
+  getCell(position: Coords): Cell {
+    return this.board[position.x][position.y];
+  }
+
+  nextTurn() {
+    this._turnSubject.next(
+      this._turnSubject.value === Color.White ? Color.Black : Color.White
+    );
+    this._selectedCellSubject.next(null)
   }
 
   private initializeBoard() {
     for (const i of Array.from(range(0, 7))) {
       this.board[i] = [];
       for (const j of Array.from(range(0, 7))) {
-        this.board[i][j] = new Cell();
+        this.board[i][j] = new Cell({ x: i, y: j });
       }
     }
 
@@ -64,42 +117,23 @@ export class ChessBoardComponent implements OnInit {
       this.board[1][i].piece = new Pawn(Color.Black);
       this.board[6][i].piece = new Pawn(Color.White);
     }
+  }
 
-    this._selectedPositionSubject
-      .asObservable()
-      .pipe(
-        pairwise(),
-        tap(([prevPosition, nextPosition]) => {
-          // remove the previous move from the board
-          if (prevPosition) {
-            const prevPiece = this.board[prevPosition.x][prevPosition.y].piece;
-            prevPiece?.unselect();
-            const prevMoves =
-              prevPiece != null ? prevPiece.getMoves(prevPosition) : [];
+  private clearMoveRange(square: Cell) {
+    this._setMoveRange(square, false);
+  }
 
-            for (const { x, y } of prevMoves) {
-              this.board[x][y].inMoveRange = false;
-            }
-          }
+  private applyMoveRange(square: Cell): void {
+    this._setMoveRange(square, true);
+  }
 
-          // add the next move to the board
-          if (nextPosition) {
-            const nextPiece = this.board[nextPosition.x][nextPosition.y].piece;
-            nextPiece?.select();
-            const nextMoves =
-              nextPiece != null ? nextPiece.getMoves(nextPosition) : [];
-
-              console.log(nextMoves);
-            for (const { x, y } of nextMoves) {
-              this.board[x][y].inMoveRange = true;
-            }
-          }
-
-          console.log(this.board);
-        }),
-        takeUntilDestroyed(this._destroyRef)
-      )
-      .subscribe();
+  private _setMoveRange(square: Cell, value: boolean): void {
+    if (square) {
+      const prevMoves = square.getMoves(this.board);
+      for (const { x, y } of prevMoves) {
+        this.board[x][y].inMoveRange = value;
+      }
+    }
   }
 
   private getAvailableMoves() {}

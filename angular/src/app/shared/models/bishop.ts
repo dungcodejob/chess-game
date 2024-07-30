@@ -1,3 +1,4 @@
+import { Cell } from './cell';
 import { Color } from './color';
 import { Coords } from './coords';
 import { ChessChar } from './fen-char';
@@ -16,7 +17,7 @@ export class Bishop extends Piece {
     super(color);
   }
 
-  getMoves(position: Coords): Coords[] {
-    return this.getStraightLineMoves(position);
+  getMoves(position: Coords, board: Cell[][]): Coords[] {
+    return this.getStraightLineMoves(position, board);
   }
 }

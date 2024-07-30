@@ -1,3 +1,4 @@
+import { Cell } from './cell';
 import { Color } from './color';
 import { Coords } from './coords';
 import { ChessChar } from './fen-char';
@@ -24,7 +25,7 @@ export class Pawn extends Piece {
     }));
   }
 
-  getMoves(position: Coords): Coords[] {
-    return this.getStepMoves(position);
+  getMoves(position: Coords, board: Cell[][]): Coords[] {
+    return this.getStepMoves(position, board);
   }
 }
