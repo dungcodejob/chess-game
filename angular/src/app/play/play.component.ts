@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
-import { ChessBoardComponent } from './chess-board/chess-board.component';
+import { Component } from "@angular/core";
+import { ChessBoardComponent } from "./chess-board/chess-board.component";
 
 @Component({
-  selector: 'app-play',
+  selector: "app-play",
   standalone: true,
   imports: [ChessBoardComponent],
-  templateUrl: './play.component.html',
-  styleUrls: ['./play.component.css'],
+  templateUrl: "./play.component.html",
+  styleUrls: ["./play.component.css"],
 })
 export class PlayComponent {}

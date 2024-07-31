@@ -1,5 +1,5 @@
-import { Coords } from './coords';
-import { Piece } from './piece';
+import { Coords } from "./coords";
+import { Piece } from "./piece";
 
 export class Cell {
   piece: Piece | null;

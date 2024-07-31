@@ -1,5 +1,5 @@
-import { NgClass } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit, Type } from '@angular/core';
+import { NgClass } from "@angular/common";
+import { Component, DestroyRef, inject, OnInit, Type } from "@angular/core";
 import {
   Bishop,
   Cell,
@@ -11,22 +11,20 @@ import {
   Piece,
   Queen,
   Rook,
-} from '@shared/models';
-import { range } from '@shared/models/utils';
-import { BehaviorSubject } from 'rxjs';
+} from "@shared/models";
+import { range } from "@shared/models/utils";
+import { BehaviorSubject } from "rxjs";
 
 @Component({
-  selector: 'app-chess-board',
+  selector: "app-chess-board",
   standalone: true,
   imports: [NgClass],
-  templateUrl: './chess-board.component.html',
-  styleUrl: './chess-board.component.css',
+  templateUrl: "./chess-board.component.html",
+  styleUrl: "./chess-board.component.css",
 })
 export class ChessBoardComponent implements OnInit {
   private readonly _destroyRef = inject(DestroyRef);
-  private readonly _selectedCellSubject = new BehaviorSubject<Cell | null>(
-    null
-  );
+  private readonly _selectedCellSubject = new BehaviorSubject<Cell | null>(null);
   private readonly _turnSubject = new BehaviorSubject<Color>(Color.White);
   board: Cell[][] = [];
 
@@ -35,8 +33,7 @@ export class ChessBoardComponent implements OnInit {
   }
   onCellClick(nextCell: Cell) {
     const turn = this._turnSubject.value;
-    const isHandleSelected =
-      nextCell.piece != null && nextCell.piece.color === turn;
+    const isHandleSelected = nextCell.piece != null && nextCell.piece.color === turn;
     if (isHandleSelected) {
       this.select(nextCell);
       return;
@@ -62,7 +59,7 @@ export class ChessBoardComponent implements OnInit {
 
   select(selectedCell: Cell): void {
     const prevCell = this._selectedCellSubject.value;
-    if(prevCell) {
+    if (prevCell) {
       prevCell.unselect();
       this.clearMoveRange(prevCell);
     }
@@ -87,7 +84,7 @@ export class ChessBoardComponent implements OnInit {
     this._turnSubject.next(
       this._turnSubject.value === Color.White ? Color.Black : Color.White
     );
-    this._selectedCellSubject.next(null)
+    this._selectedCellSubject.next(null);
   }
 
   private initializeBoard() {

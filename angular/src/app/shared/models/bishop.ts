@@ -1,8 +1,8 @@
-import { Cell } from './cell';
-import { Color } from './color';
-import { Coords } from './coords';
-import { ChessChar } from './fen-char';
-import { Piece } from './piece';
+import { Cell } from "./cell";
+import { Color } from "./color";
+import { Coords } from "./coords";
+import { ChessChar } from "./fen-char";
+import { Piece } from "./piece";
 
 export class Bishop extends Piece {
   protected override _char: ChessChar = ChessChar.Bishop;

@@ -1,0 +1,6 @@
+.board__square--black {
+  @apply bg-[#595959];
+}
+.board__square--selected {
+  @apply bg-orange-400 outline outline-2 rounded z-10 outline-black;
+}

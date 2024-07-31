@@ -1,21 +1,21 @@
-import { Cell } from './cell';
-import { Color } from './color';
-import { Coords } from './coords';
-import { ChessChar } from './fen-char';
-import { range } from './utils';
+import { Cell } from "./cell";
+import { Color } from "./color";
+import { Coords } from "./coords";
+import { ChessChar } from "./fen-char";
+import { range } from "./utils";
 
 const charNames: Record<ChessChar, string> = {
-  [ChessChar.Pawn]: 'pawn',
-  [ChessChar.Knight]: 'knight',
-  [ChessChar.Bishop]: 'bishop',
-  [ChessChar.Rook]: 'rook',
-  [ChessChar.Queen]: 'queen',
-  [ChessChar.King]: 'king',
+  [ChessChar.Pawn]: "pawn",
+  [ChessChar.Knight]: "knight",
+  [ChessChar.Bishop]: "bishop",
+  [ChessChar.Rook]: "rook",
+  [ChessChar.Queen]: "queen",
+  [ChessChar.King]: "king",
 };
 
 const colorPaths: Record<Color, string> = {
-  [Color.White]: 'w',
-  [Color.Black]: 'b',
+  [Color.White]: "w",
+  [Color.Black]: "b",
 };
 
 export abstract class Piece {
@@ -23,7 +23,7 @@ export abstract class Piece {
   protected abstract _directions: Coords[];
   protected _color: Color;
 
-  get color (): Color {
+  get color(): Color {
     return this._color;
   }
   get asset(): string {
@@ -85,8 +85,6 @@ export abstract class Piece {
   }
 
   protected isMoveWithinBoard(position: Coords): boolean {
-    return (
-      0 <= position.x && position.x < 8 && 0 <= position.y && position.y < 8
-    );
+    return 0 <= position.x && position.x < 8 && 0 <= position.y && position.y < 8;
   }
 }
