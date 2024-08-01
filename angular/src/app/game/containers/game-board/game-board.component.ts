@@ -16,13 +16,13 @@ import { range } from "@shared/models/utils";
 import { BehaviorSubject } from "rxjs";
 
 @Component({
-  selector: "app-chess-board",
+  selector: "app-game-board",
   standalone: true,
   imports: [NgClass],
-  templateUrl: "./chess-board.component.html",
-  styleUrl: "./chess-board.component.css",
+  templateUrl: "./game-board.component.html",
+  styleUrl: "./game-board.component.css",
 })
-export class ChessBoardComponent implements OnInit {
+export class GameBoardComponent implements OnInit {
   private readonly _destroyRef = inject(DestroyRef);
   private readonly _selectedCellSubject = new BehaviorSubject<Cell | null>(null);
   private readonly _turnSubject = new BehaviorSubject<Color>(Color.White);
