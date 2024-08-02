@@ -29,4 +29,14 @@ export class Cell {
 
     return [];
   }
+
+  private positionToNotation(position: Coords): { column: string; row: number } {
+    const columns = ["A", "B", "C", "D", "E", "F", "G", "H"];
+    const column = columns[position.x];
+
+    // Chuyển đổi chỉ số hàng thành số hàng
+    const row = 8 - position.y;
+
+    return { column, row };
+  }
 }

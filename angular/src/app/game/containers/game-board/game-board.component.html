@@ -2,22 +2,35 @@
   <div class="border border-black grid grid-cols-8">
     @for (col of board; track $index; let idx = $index) {
       @for (cell of col; track $index; let idy = $index) {
-        <button
+        <div class="relative w-16 h-16">
+          @if (cell.position.x === 7) {
+            <p class="absolute -bottom-8 left-2 font-bold">
+              {{ cell.position.y + 1 }}
+            </p>
+          }
 
-          [class.board__square--black]="(idy - idx) % 2 === 0"
-          [class.board__square--selected]="cell.selected"
-          class="flex items-center justify-center cursor-pointer relative w-16 h-16 p-2"
-          (click)="onCellClick(cell)">
-          @if (cell.piece) {
-            <div class="w-full h-full">
-              <img [src]="cell.piece.asset" [alt]="cell.piece.asset" />
-            </div>
+          @if (cell.position.y === 0) {
+            <p class="absolute top-2 -left-5 font-bold">
+              {{ cell.position.x + 1 }}
+            </p>
           }
-          @if (cell.inMoveRange) {
-            <div
-              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black w-3 h-3 opacity-55"></div>
-          }
-        </button>
+
+          <button
+            [class.board__square--black]="(idy - idx) % 2 === 0"
+            [class.board__square--selected]="cell.selected"
+            class="flex items-center justify-center cursor-pointer w-full h-full p-2"
+            (click)="onCellClick(cell)">
+            @if (cell.piece) {
+              <div class="w-full h-full">
+                <img [src]="cell.piece.asset" [alt]="cell.piece.asset" />
+              </div>
+            }
+            @if (cell.inMoveRange) {
+              <div
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black w-3 h-3 opacity-55"></div>
+            }
+          </button>
+        </div>
       }
     }
   </div>
