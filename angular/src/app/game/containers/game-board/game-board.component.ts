@@ -12,7 +12,7 @@ import {
   Queen,
   Rook,
 } from "@shared/models";
-import { range } from "@shared/models/utils";
+import { range } from "@shared/utils";
 import { BehaviorSubject } from "rxjs";
 
 @Component({

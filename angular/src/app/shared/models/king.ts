@@ -5,7 +5,7 @@ import { ChessChar } from "./fen-char";
 import { Piece } from "./piece";
 
 export class King extends Piece {
-  protected override _char: ChessChar = ChessChar.King;
+  protected override _char: ChessChar;
   protected override _directions: Coords[] = [
     { x: 0, y: 1 },
     { x: 0, y: -1 },
@@ -19,6 +19,8 @@ export class King extends Piece {
 
   constructor(color: Color) {
     super(color);
+
+    this._char = color === Color.White ? ChessChar.WhiteKing : ChessChar.BlackKing;
   }
 
   getMoves(position: Coords, board: Cell[][]): Coords[] {

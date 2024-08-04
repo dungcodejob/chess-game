@@ -5,7 +5,7 @@ import { ChessChar } from "./fen-char";
 import { Piece } from "./piece";
 
 export class Pawn extends Piece {
-  protected override _char: ChessChar = ChessChar.Pawn;
+  protected override _char: ChessChar;
   protected override _directions: Coords[] = [
     { x: 1, y: 0 },
     { x: 2, y: 0 },
@@ -16,6 +16,7 @@ export class Pawn extends Piece {
   constructor(color: Color) {
     super(color);
     if (color !== Color.Black) this.setWhitePawnDirections();
+    this._char = color === Color.White ? ChessChar.WhitePawn : ChessChar.BlackPawn;
   }
 
   private setWhitePawnDirections(): void {

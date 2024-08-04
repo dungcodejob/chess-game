@@ -1,21 +1,22 @@
+import { range } from "../utils";
 import { Cell } from "./cell";
 import { Color } from "./color";
 import { Coords } from "./coords";
 import { ChessChar } from "./fen-char";
-import { range } from "./utils";
 
 const charNames: Record<ChessChar, string> = {
-  [ChessChar.Pawn]: "pawn",
-  [ChessChar.Knight]: "knight",
-  [ChessChar.Bishop]: "bishop",
-  [ChessChar.Rook]: "rook",
-  [ChessChar.Queen]: "queen",
-  [ChessChar.King]: "king",
-};
-
-const colorPaths: Record<Color, string> = {
-  [Color.White]: "w",
-  [Color.Black]: "b",
+  [ChessChar.BlackBishop]: "b_bishop",
+  [ChessChar.BlackKing]: "b_king",
+  [ChessChar.BlackKnight]: "b_knight",
+  [ChessChar.BlackPawn]: "b_pawn",
+  [ChessChar.BlackQueen]: "b_queen",
+  [ChessChar.BlackRook]: "b_rook",
+  [ChessChar.WhiteBishop]: "w_bishop",
+  [ChessChar.WhiteKing]: "w_king",
+  [ChessChar.WhiteKnight]: "w_knight",
+  [ChessChar.WhitePawn]: "w_pawn",
+  [ChessChar.WhiteQueen]: "w_queen",
+  [ChessChar.WhiteRook]: "w_rook",
 };
 
 export abstract class Piece {
@@ -28,8 +29,7 @@ export abstract class Piece {
   }
   get asset(): string {
     const charName = charNames[this._char];
-    const colorPath = colorPaths[this._color];
-    return `assets/pieces/${colorPath}_${charName}.svg`;
+    return `assets/pieces/${charName}.svg`;
   }
 
   constructor(color: Color) {

@@ -5,7 +5,7 @@ import { ChessChar } from "./fen-char";
 import { Piece } from "./piece";
 
 export class Knight extends Piece {
-  protected _char: ChessChar = ChessChar.Knight;
+  protected _char: ChessChar;
   protected _directions: Coords[] = [
     { x: 1, y: 2 },
     { x: 1, y: -2 },
@@ -19,6 +19,7 @@ export class Knight extends Piece {
 
   constructor(color: Color) {
     super(color);
+    this._char = color === Color.White ? ChessChar.WhiteKnight : ChessChar.BlackKnight;
   }
 
   getMoves(position: Coords, board: Cell[][]): Coords[] {
