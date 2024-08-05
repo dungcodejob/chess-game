@@ -2,12 +2,14 @@ import { Coords } from "./coords";
 import { Piece } from "./piece";
 
 export class Cell {
+  id: string;
   piece: Piece | null;
   position: Coords;
   inMoveRange: boolean;
   selected: boolean;
 
-  constructor(position: Coords, piece?: Piece) {
+  constructor(id: string, position: Coords, piece?: Piece) {
+    this.id = id;
     this.position = position;
     this.piece = piece ?? null;
     this.inMoveRange = false;
