@@ -1,35 +1,45 @@
 import { Coords } from "./coords";
 import { Piece } from "./piece";
 
+export interface Move {
+  piece: Piece;
+  from: Coords;
+  to: Coords;
+}
+
+export type CellId = `${Coords["x"]}-${Coords["y"]}`;
+
 export class Cell {
-  id: string;
-  piece: Piece | null;
-  position: Coords;
-  inMoveRange: boolean;
-  selected: boolean;
+  private readonly _id: CellId;
+  private _piece: Piece | null;
+  private _position: Coords;
+  private _inMoveRange: boolean;
 
-  constructor(id: string, position: Coords, piece?: Piece) {
-    this.id = id;
-    this.position = position;
-    this.piece = piece ?? null;
-    this.inMoveRange = false;
-    this.selected = false;
+  get id(): string {
+    return this._id;
   }
 
-  select(): void {
-    this.selected = true;
+  get position(): Coords {
+    return this._position;
   }
 
-  unselect(): void {
-    this.selected = false;
+  get piece(): Piece | null {
+    return this._piece;
   }
 
-  getMoves(board: Cell[][]): Coords[] {
-    if (this.piece) {
-      return this.piece.getMoves(this.position, board);
-    }
+  get inMoveRange(): boolean {
+    return this._inMoveRange;
+  }
 
-    return [];
+  constructor(position: Coords) {
+    this._id = Cell.positionToId(position);
+    this._position = position;
+    this._piece = null;
+    this._inMoveRange = false;
+  }
+
+  setPiece(piece: Piece) {
+    this._piece = piece;
   }
 
   private positionToNotation(position: Coords): { column: string; row: number } {
@@ -41,4 +51,13 @@ export class Cell {
 
     return { column, row };
   }
+
+  static positionToId = (position: Coords): CellId => {
+    return `${position.x}-${position.y}`;
+  };
+
+  static idToPosition = (id: CellId): Coords => {
+    const [x, y] = id.split("-").map(Number);
+    return { x, y };
+  };
 }

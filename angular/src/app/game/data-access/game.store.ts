@@ -30,5 +30,13 @@ const initialState: GameState = {
 
 export const GameStore = signalStore(
   withState(initialState),
-  withMethods(store => ({ setTurn: (turn: Color) => patchState(store, { turn }) }))
+  withMethods(store => ({
+    switchTurn: () => {
+      patchState(store, {
+        turn: store.turn() === Color.White ? Color.Black : Color.White,
+        fullMoveNumber: store.fullMoveNumber() + 1,
+      });
+    },
+    resetHalfMoveClock: () => patchState(store, { halfMoveClock: 0 }),
+  }))
 );
