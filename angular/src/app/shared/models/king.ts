@@ -23,7 +23,7 @@ export class King extends Piece {
     this._char = color === Color.White ? ChessChar.WhiteKing : ChessChar.BlackKing;
   }
 
-  getMoves(position: Coords, board: Cell[][]): Coords[] {
+  getMoveRanges(position: Coords, board: Cell[][]): Coords[] {
     return this.getStepMoves(position, board);
   }
 }

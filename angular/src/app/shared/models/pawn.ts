@@ -26,7 +26,7 @@ export class Pawn extends Piece {
     }));
   }
 
-  getMoves(position: Coords, board: Cell[][]): Coords[] {
+  getMoveRanges(position: Coords, board: Cell[][]): Coords[] {
     return this.getStepMoves(position, board);
   }
 }

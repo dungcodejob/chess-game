@@ -36,7 +36,7 @@ export abstract class Piece {
     this._color = color;
   }
 
-  abstract getMoves(position: Coords, board: Cell[][]): Coords[];
+  abstract getMoveRanges(position: Coords, board: Cell[][]): Coords[];
 
   protected getStepMoves(position: Coords, board: Cell[][]): Coords[] {
     const moves: Coords[] = [];

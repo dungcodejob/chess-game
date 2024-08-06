@@ -52,9 +52,15 @@ export class Cell {
     return { column, row };
   }
 
-  static positionToId = (position: Coords): CellId => {
+  static positionToId(position: Coords): CellId;
+  static positionToId(position: Coords[]): CellId[];
+  static positionToId(position: Coords | Coords[]): CellId | CellId[] {
+    if (Array.isArray(position)) {
+      return position.map(item => Cell.positionToId(item));
+    }
+
     return `${position.x}-${position.y}`;
-  };
+  }
 
   static idToPosition = (id: CellId): Coords => {
     const [x, y] = id.split("-").map(Number);

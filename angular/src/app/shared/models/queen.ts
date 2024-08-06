@@ -24,7 +24,7 @@ export class Queen extends Piece {
     this._char = color === Color.White ? ChessChar.WhiteQueen : ChessChar.BlackQueen;
   }
 
-  getMoves(position: Coords, board: Cell[][]): Coords[] {
+  getMoveRanges(position: Coords, board: Cell[][]): Coords[] {
     return this.getStraightLineMoves(position, board);
   }
 }

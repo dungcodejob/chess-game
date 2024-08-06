@@ -9,6 +9,7 @@ export class GameBoardFacade {
 
   readonly $boards = this._store.$boards;
   readonly $selectedId = this._store.$selectedId;
+  readonly $moveRangeIds = this._store.$moveRangeIds;
 
   initialize = this._store.initialize;
 }
