@@ -7,29 +7,8 @@ import {
   trigger,
 } from "@angular/animations";
 import { NgClass } from "@angular/common";
-import {
-  Component,
-  computed,
-  DestroyRef,
-  inject,
-  OnInit,
-  signal,
-  Type,
-} from "@angular/core";
-import {
-  Bishop,
-  Cell,
-  Color,
-  Coords,
-  King,
-  Knight,
-  Pawn,
-  Piece,
-  Queen,
-  Rook,
-} from "@shared/models";
-import { range } from "@shared/utils";
-import { BehaviorSubject } from "rxjs";
+import { Component, computed, DestroyRef, inject, OnInit, signal } from "@angular/core";
+import { Cell, Move } from "@shared/models";
 import { GameBoardFacade } from "./game-board.facade";
 import { GameBoardStore } from "./game-board.store";
 
@@ -68,11 +47,9 @@ export class GameBoardComponent implements OnInit {
   readonly $boards = this._facade.$boards;
   readonly $selectedId = this._facade.$selectedId;
   readonly $moveRangeIds = this._facade.$moveRangeIds;
+  readonly $turn = this._facade.$turn;
 
-  readonly $moveAnimationPosition = signal<{
-    from: Coords;
-    to: Coords;
-  } | null>(null);
+  readonly $moveAnimationPosition = signal<Move | null>(null);
   readonly $moveAnimationState = computed(() =>
     this.$moveAnimationPosition() !== null
       ? MoveAnimationState.Moving
@@ -105,7 +82,6 @@ export class GameBoardComponent implements OnInit {
     this._facade.initialize();
   }
   onCellClick(nextCell: Cell) {
-
     const turn = this._facade.$turn();
     const isHandleSelected = nextCell.piece != null && nextCell.piece.color === turn;
     if (isHandleSelected) {
@@ -122,100 +98,17 @@ export class GameBoardComponent implements OnInit {
       const to = nextCell.position;
       const toPiece = nextCell.piece;
 
-      // this.$moveAnimationPosition.set({ from: prevCell.position, to: nextCell.position });
-      this._facade.move({ fromPiece, from, to, toPiece })
+      this.$moveAnimationPosition.set({ fromPiece, from, to, toPiece });
+      // this._facade.move({ fromPiece, from, to, toPiece });
       return;
     }
   }
 
   onMoveAnimationDone(event: AnimationEvent) {
-    // const move = this.$moveAnimationPosition();
-    // if (move) {
-    //   const { from, to } = move;
-    //   const fromCell = this.getCell(from);
-    //   const toCell = this.getCell(to);
-    //   this.move(fromCell, toCell);
-    //   this.nextTurn();
-    //   this.$moveAnimationPosition.set(null);
-    // }
+    const move = this.$moveAnimationPosition();
+    if (move && event.toState === MoveAnimationState.Moving) {
+      this.$moveAnimationPosition.set(null);
+      this._facade.move(move);
+    }
   }
-
-  // isOccupied(square: Cell): boolean {
-  //   return square.piece !== null;
-  // }
-
-  // isInMoveRange(square: Cell): boolean {
-  //   return square.inMoveRange;
-  // }
-
-  // select(selectedCell: Cell): void {
-  //   const prevCell = this._selectedCellSubject.value;
-  //   if (prevCell) {
-  //     prevCell.unselect();
-  //     this.clearMoveRange(prevCell);
-  //   }
-  //   selectedCell.select();
-  //   this.applyMoveRange(selectedCell);
-  //   this._selectedCellSubject.next(selectedCell);
-  // }
-
-  // move(from: Cell, to: Cell): void {
-  //   from.unselect();
-
-  //   const piece = from.piece;
-  //   from.piece = null;
-  //   to.piece = piece;
-  // }
-
-  // getCell(position: Coords): Cell {
-  //   return this.board[position.x][position.y];
-  // }
-
-  // private initializeBoard() {
-  //   for (const i of Array.from(range(0, 7))) {
-  //     this.board[i] = [];
-  //     for (const j of Array.from(range(0, 7))) {
-  //       this.board[i][j] = new Cell((i * 8 + j).toString(), { x: i, y: j });
-  //     }
-  //   }
-
-  //   const pieceClasses: Type<Piece>[] = [
-  //     Rook,
-  //     Knight,
-  //     Bishop,
-  //     Queen,
-  //     King,
-  //     Bishop,
-  //     Knight,
-  //     Rook,
-  //   ];
-
-  //   for (const i of Array.from(range(0, 7))) {
-  //     // Place the pieces on the 1st and 8th ranks
-  //     this.board[0][i].piece = new pieceClasses[i](Color.Black);
-  //     this.board[7][i].piece = new pieceClasses[i](Color.White);
-  //     // Place the pawns on the 2nd and 7th ranks
-  //     this.board[1][i].piece = new Pawn(Color.Black);
-  //     this.board[6][i].piece = new Pawn(Color.White);
-  //   }
-  // }
-
-  // private clearMoveRange(square: Cell) {
-  //   this._setMoveRange(square, false);
-  // }
-
-  // private applyMoveRange(square: Cell): void {
-  //   this._setMoveRange(square, true);
-  // }
-
-  // private _setMoveRange(square: Cell, value: boolean): void {
-  //   if (square) {
-  //     const prevMoves = square.getMoves(this.board);
-  //     for (const { x, y } of prevMoves) {
-  //       this.board[x][y].inMoveRange = value;
-  //     }
-  //   }
-  // }
-
-  // private getAvailableMoves() { }
 }

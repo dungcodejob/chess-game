@@ -53,10 +53,7 @@ export abstract class Piece {
         y: moveY,
       });
       if (isMoveWithinBoard) {
-        const isMoveEmpty = !board[moveX][moveY].piece;
-        if (isMoveEmpty) {
-          moves.push({ x: moveX, y: moveY });
-        }
+        moves.push({ x: moveX, y: moveY });
       }
     }
 
@@ -76,9 +73,8 @@ export abstract class Piece {
 
         if (isMoveWithinBoard) {
           const isMoveEmpty = !board[moveX][moveY].piece;
-          if (isMoveEmpty) {
-            moves.push({ x: moveX, y: moveY });
-          } else {
+          moves.push({ x: moveX, y: moveY });
+          if (!isMoveEmpty) {
             break;
           }
         }

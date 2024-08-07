@@ -5,7 +5,6 @@ import {
   Cell,
   CellId,
   Color,
-  Coords,
   King,
   Knight,
   Move,

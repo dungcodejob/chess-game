@@ -1,7 +1,7 @@
 import { computed, inject, Injectable } from "@angular/core";
 import { GameFacade } from "@play/data-access";
+import { Cell, CellId, Move } from "@shared/models";
 import { GameBoardStore } from "./game-board.store";
-import { Cell, CellId, Coords, Move, Piece } from "@shared/models";
 
 @Injectable()
 export class GameBoardFacade {
@@ -20,25 +20,23 @@ export class GameBoardFacade {
       return cell.piece;
     }
 
-    return null
+    return null;
   });
 
-  initialize (){
-    this._store.initialize()
-  };
+  initialize() {
+    this._store.initialize();
+  }
 
   select(id: CellId) {
-    this._store.select(id)
-  };
+    this._store.select(id);
+  }
 
   unselect() {
-    this._store.unselect()
-  };
-  
+    this._store.unselect();
+  }
+
   move(move: Move) {
     this._store.move(move);
     this._gameFacade.addMove(move);
   }
-
-
 }

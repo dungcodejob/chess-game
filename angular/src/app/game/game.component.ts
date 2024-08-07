@@ -11,6 +11,6 @@ import { FENService } from "./data-access/fen.service";
   imports: [GameBoardComponent, GameControllerComponent],
   templateUrl: "./game.component.html",
   styleUrls: ["./game.component.css"],
-  providers: [FENService,GameFacade, GameStore],
+  providers: [FENService, GameFacade, GameStore],
 })
-export class GameComponent { }
+export class GameComponent {}

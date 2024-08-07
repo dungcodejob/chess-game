@@ -1,6 +1,6 @@
-import { effect, inject, Injectable, Injector, untracked } from "@angular/core";
-import { GameStore } from "./game.store";
+import { inject, Injectable, Injector } from "@angular/core";
 import { Move } from "@shared/models";
+import { GameStore } from "./game.store";
 
 @Injectable()
 export class GameFacade {
@@ -11,8 +11,7 @@ export class GameFacade {
   $fullMoveNumber = this._store.fullMoveNumber;
   $moves = this._store.moves;
 
-  initialize() {
-  }
+  initialize() {}
 
   addMove(move: Move) {
     this._store.addMove(move);

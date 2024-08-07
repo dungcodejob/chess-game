@@ -1,4 +1,4 @@
-<div class="flex">
+<div class="flex justify-center">
   <div class="border border-black grid grid-cols-8">
     @for (col of $boards(); track $index; let idx = $index) {
       @for (cell of col; track $index; let idy = $index) {
@@ -15,19 +15,22 @@
             </p>
           }
 
-
           <button
             [class.board__square--black]="(idy - idx) % 2 === 0"
-            [class.board__square--selected]="cell.id === $selectedId()"
+            [class.board__square--selected]="
+              cell.id === $selectedId() && $moveAnimationState() !== 'moving'
+            "
+            [class.board__square--capturable]="
+              $moveRangeIds().includes(cell.id) &&
+              cell.piece &&
+              cell.piece.color !== $turn()
+            "
             class="flex items-center justify-center cursor-pointer w-full h-full p-2 z-40"
             (click)="onCellClick(cell)">
             @if (cell.piece) {
               <div
                 [@move]="{
-                  value:
-                    cell.id === $selectedId() && $moveAnimationPosition() !== null
-                      ? 'moving'
-                      : 'idle',
+                  value: cell.id === $selectedId() && $moveAnimationState(),
                   params: $moveAnimationTransform(),
                 }"
                 (@move.done)="onMoveAnimationDone($event)"
@@ -35,7 +38,9 @@
                 <img [src]="cell.piece.asset" [alt]="cell.piece.asset" />
               </div>
             }
-            @if ($moveRangeIds().includes(cell.id)) {
+            @if (
+              $moveRangeIds().includes(cell.id) && $moveAnimationState() !== "moving"
+            ) {
               <div
                 class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black w-4 h-4 opacity-55"></div>
             }

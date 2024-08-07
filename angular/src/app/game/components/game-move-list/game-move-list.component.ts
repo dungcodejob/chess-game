@@ -1,5 +1,4 @@
-import { Component, inject, input, OnInit } from "@angular/core";
-import { GameFacade } from "@play/data-access";
+import { Component, inject, input } from "@angular/core";
 import { FENService } from "@play/data-access/fen.service";
 import { Move } from "@shared/models";
 
@@ -12,5 +11,8 @@ import { Move } from "@shared/models";
 export class GameMoveListComponent {
   private readonly _fENService = inject(FENService);
 
-  $moves = input.required({ alias: 'moves', transform: (moves: Move[]) =>  this._fENService.moveToCoordinates(moves) });
+  $moves = input.required({
+    alias: "moves",
+    transform: (moves: Move[]) => this._fENService.moveToCoordinates(moves),
+  });
 }

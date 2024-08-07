@@ -1,7 +1,6 @@
 import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
 import { ChessChar, Color, Move } from "@shared/models";
 
-
 enum Level {
   Beginner = 1,
   Intermediate = 2,
@@ -47,42 +46,44 @@ const initialState: GameState = {
 export const GameStore = signalStore(
   withState(initialState),
   withMethods(store => {
-
     const checkHalfMove = (move: Move) => {
       const { fromPiece, toPiece } = move;
       if (!toPiece) {
         return false;
       }
-      if (fromPiece.char === ChessChar.WhitePawn || fromPiece.char === ChessChar.BlackPawn) {
+      if (
+        fromPiece.char === ChessChar.WhitePawn ||
+        fromPiece.char === ChessChar.BlackPawn
+      ) {
         return true;
       }
 
       return false;
-    }
+    };
 
     return {
-
       startGame: (playerColor: Color, level: Level) => {
         patchState(store, {
           turn: Color.White,
           playerColor,
-          level
+          level,
         });
       },
 
       addMove: (move: Move) => {
-
         const isHalfMove = checkHalfMove(move);
-        const halfMoveClock = isHalfMove ? store.halfMoveClock() + 1 : store.halfMoveClock();
+        const halfMoveClock = isHalfMove
+          ? store.halfMoveClock() + 1
+          : store.halfMoveClock();
 
         return patchState(store, {
           moves: [...store.moves(), move],
           turn: store.turn() === Color.White ? Color.Black : Color.White,
           fullMoveNumber: store.fullMoveNumber() + 1,
           halfMoveClock,
-        })
+        });
       },
       resetHalfMoveClock: () => patchState(store, { halfMoveClock: 0 }),
-    }
+    };
   })
 );
