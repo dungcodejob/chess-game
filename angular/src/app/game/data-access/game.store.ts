@@ -1,5 +1,15 @@
 import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
-import { ChessChar, Color } from "@shared/models";
+import { ChessChar, Color, Move } from "@shared/models";
+
+
+enum Level {
+  Beginner = 1,
+  Intermediate = 2,
+  Advanced = 3,
+  Expert = 4,
+  Master = 5,
+  Default = Intermediate,
+}
 
 type CastlingAvailability =
   | ChessChar.WhiteKing
@@ -13,10 +23,13 @@ interface GameState {
   enPassantTarget: string | null;
   halfMoveClock: number;
   fullMoveNumber: number;
+  moves: Move[];
+  level: Level;
+  playerColor: Color;
 }
 
 const initialState: GameState = {
-  turn: Color.Default,
+  turn: Color.White,
   halfMoveClock: 0,
   fullMoveNumber: 1,
   enPassantTarget: null,
@@ -26,17 +39,50 @@ const initialState: GameState = {
     ChessChar.BlackKing,
     ChessChar.BlackQueen,
   ],
+  moves: [],
+  level: Level.Default,
+  playerColor: Color.Default,
 };
 
 export const GameStore = signalStore(
   withState(initialState),
-  withMethods(store => ({
-    switchTurn: () => {
-      patchState(store, {
-        turn: store.turn() === Color.White ? Color.Black : Color.White,
-        fullMoveNumber: store.fullMoveNumber() + 1,
-      });
-    },
-    resetHalfMoveClock: () => patchState(store, { halfMoveClock: 0 }),
-  }))
+  withMethods(store => {
+
+    const checkHalfMove = (move: Move) => {
+      const { fromPiece, toPiece } = move;
+      if (!toPiece) {
+        return false;
+      }
+      if (fromPiece.char === ChessChar.WhitePawn || fromPiece.char === ChessChar.BlackPawn) {
+        return true;
+      }
+
+      return false;
+    }
+
+    return {
+
+      startGame: (playerColor: Color, level: Level) => {
+        patchState(store, {
+          turn: Color.White,
+          playerColor,
+          level
+        });
+      },
+
+      addMove: (move: Move) => {
+
+        const isHalfMove = checkHalfMove(move);
+        const halfMoveClock = isHalfMove ? store.halfMoveClock() + 1 : store.halfMoveClock();
+
+        return patchState(store, {
+          moves: [...store.moves(), move],
+          turn: store.turn() === Color.White ? Color.Black : Color.White,
+          fullMoveNumber: store.fullMoveNumber() + 1,
+          halfMoveClock,
+        })
+      },
+      resetHalfMoveClock: () => patchState(store, { halfMoveClock: 0 }),
+    }
+  })
 );

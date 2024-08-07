@@ -1,11 +1,16 @@
-import { Component, input, OnInit } from "@angular/core";
+import { Component, inject, input, OnInit } from "@angular/core";
+import { GameFacade } from "@play/data-access";
+import { FENService } from "@play/data-access/fen.service";
 import { Move } from "@shared/models";
 
 @Component({
   selector: "app-game-move-list",
   templateUrl: "./game-move-list.component.html",
   styleUrls: ["./game-move-list.component.css"],
+  standalone: true,
 })
 export class GameMoveListComponent {
-  $move = input.required<Move[]>();
+  private readonly _fENService = inject(FENService);
+
+  $moves = input.required({ alias: 'moves', transform: (moves: Move[]) =>  this._fENService.moveToCoordinates(moves) });
 }

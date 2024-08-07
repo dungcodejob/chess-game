@@ -24,6 +24,10 @@ export abstract class Piece {
   protected abstract _directions: Coords[];
   protected _color: Color;
 
+  get char(): ChessChar {
+    return this._char;
+  }
+
   get color(): Color {
     return this._color;
   }

@@ -2,7 +2,8 @@ import { Coords } from "./coords";
 import { Piece } from "./piece";
 
 export interface Move {
-  piece: Piece;
+  fromPiece: Piece;
+  toPiece: Piece | null;
   from: Coords;
   to: Coords;
 }
@@ -15,7 +16,7 @@ export class Cell {
   private _position: Coords;
   private _inMoveRange: boolean;
 
-  get id(): string {
+  get id(): CellId {
     return this._id;
   }
 
@@ -38,7 +39,7 @@ export class Cell {
     this._inMoveRange = false;
   }
 
-  setPiece(piece: Piece) {
+  setPiece(piece: Piece | null) {
     this._piece = piece;
   }
 

@@ -1,4 +1,4 @@
-import { inject, Injectable, Injector, Type } from "@angular/core";
+import { computed, inject, Injectable, Injector, Type } from "@angular/core";
 import { patchState, signalState } from "@ngrx/signals";
 import {
   Bishop,
@@ -17,25 +17,22 @@ import {
 import { range } from "@shared/utils";
 
 interface GameBoardState {
-  boards: Cell[][];
   selectedId: CellId | null;
   moveRangeIds: CellId[];
-  moves: Move[];
 }
 
 const initialState: GameBoardState = {
-  boards: [],
   selectedId: null,
   moveRangeIds: [],
-  moves: [],
 };
 
 @Injectable()
 export class GameBoardStore {
   private readonly _injector = inject(Injector);
   private readonly _$state = signalState(initialState);
+  private readonly _boards: Cell[][] = [];
 
-  readonly $boards = this._$state.boards;
+  readonly $boards = computed(() => this._boards);
   readonly $selectedId = this._$state.selectedId;
   readonly $moveRangeIds = this._$state.moveRangeIds;
 
@@ -44,9 +41,9 @@ export class GameBoardStore {
   }
 
   select(id: CellId) {
-    const board = this.$boards();
+    const board = this._boards;
     const position = Cell.idToPosition(id);
-    const cell = board[position.y][position.x];
+    const cell = board[position.x][position.y];
     const piece = cell.piece;
     if (piece) {
       const range = piece.getMoveRanges(position, board);
@@ -64,11 +61,16 @@ export class GameBoardStore {
     });
   }
 
-  move(piece: Piece, from: Coords, to: Coords) {
-    patchState(this._$state, {
-      moves: [...this._$state.moves(), { piece, from, to }],
+  move(move: Move) {
+    const { from, to } = move;
+    const board = this._boards;
+    const fromCell = board[from.x][from.y];
+    const toCell = board[to.x][to.y];
 
-    });
+    fromCell.setPiece(null);
+    toCell.setPiece(move.fromPiece);
+
+    this.unselect();
   }
 
   private initializeBoard() {

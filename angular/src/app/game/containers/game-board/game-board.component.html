@@ -1,6 +1,6 @@
 <div class="flex">
   <div class="border border-black grid grid-cols-8">
-    @for (col of board; track $index; let idx = $index) {
+    @for (col of $boards(); track $index; let idx = $index) {
       @for (cell of col; track $index; let idy = $index) {
         <div class="relative w-16 h-16">
           @if (cell.position.x === 7) {
@@ -18,14 +18,14 @@
 
           <button
             [class.board__square--black]="(idy - idx) % 2 === 0"
-            [class.board__square--selected]="cell.selected"
+            [class.board__square--selected]="cell.id === $selectedId()"
             class="flex items-center justify-center cursor-pointer w-full h-full p-2 z-40"
             (click)="onCellClick(cell)">
             @if (cell.piece) {
               <div
                 [@move]="{
                   value:
-                    cell.id === selectedCellId && $moveAnimationPosition() !== null
+                    cell.id === $selectedId() && $moveAnimationPosition() !== null
                       ? 'moving'
                       : 'idle',
                   params: $moveAnimationTransform(),
@@ -35,7 +35,7 @@
                 <img [src]="cell.piece.asset" [alt]="cell.piece.asset" />
               </div>
             }
-            @if (cell.inMoveRange) {
+            @if ($moveRangeIds().includes(cell.id)) {
               <div
                 class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black w-4 h-4 opacity-55"></div>
             }
