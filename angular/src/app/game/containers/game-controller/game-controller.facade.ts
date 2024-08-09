@@ -6,4 +6,5 @@ export class GameControllerFacade {
   private readonly _store = inject(GameFacade);
 
   $moves = this._store.$moves;
+  $turn = this._store.$turn;
 }
