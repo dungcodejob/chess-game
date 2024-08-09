@@ -18,11 +18,13 @@ import { range } from "@shared/utils";
 interface GameBoardState {
   selectedId: CellId | null;
   moveRangeIds: CellId[];
+  squareSize: number;
 }
 
 const initialState: GameBoardState = {
   selectedId: null,
   moveRangeIds: [],
+  squareSize: 64,
 };
 
 @Injectable()
@@ -34,6 +36,7 @@ export class GameBoardStore {
   readonly $boards = computed(() => this._boards);
   readonly $selectedId = this._$state.selectedId;
   readonly $moveRangeIds = this._$state.moveRangeIds;
+  readonly $squareSize = this._$state.squareSize;
 
   initialize() {
     this.initializeBoard();

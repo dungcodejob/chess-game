@@ -55,18 +55,12 @@ export class GameBoardComponent implements OnInit {
       ? MoveAnimationState.Moving
       : MoveAnimationState.Idle
   );
-
-  get moveAnimationPosition() {
-    return this.$moveAnimationPosition();
-  }
-
   readonly $moveAnimationTransform = computed(() => {
     const move = this.$moveAnimationPosition();
     if (move) {
-      console.log(move);
       const y = (move.to.x - move.from.x) * 64;
       const x = (move.to.y - move.from.y) * 64;
-      console.log(`translate(${x}px,${y}px`);
+
       return {
         x,
         y,
@@ -76,32 +70,33 @@ export class GameBoardComponent implements OnInit {
     return { x: 0, y: 0 };
   });
 
-  board: Cell[][] = [];
-
   ngOnInit(): void {
     this._facade.initialize();
   }
   onCellClick(nextCell: Cell) {
-    const turn = this._facade.$turn();
-    const isHandleSelected = nextCell.piece != null && nextCell.piece.color === turn;
-    if (isHandleSelected) {
+    const canSelectSquare = this.canSelectSquare(nextCell);
+    if (canSelectSquare) {
       this._facade.select(nextCell.id);
       return;
     }
 
-    const selectedId = this._facade.$selectedId();
-    const moveRangeIds = this._facade.$moveRangeIds();
-    const isHandleMove = selectedId !== null && moveRangeIds.includes(nextCell.id);
-    if (isHandleMove) {
-      const fromPiece = this._facade.$selectedPiece()!;
-      const from = Cell.idToPosition(selectedId);
+    const canMoveSquare = this.canMoveSquare(nextCell);
+    if (canMoveSquare) {
+      const prevCell = this._facade.$selectedCell()!;
+      const fromPiece = prevCell.piece!;
+      const from = prevCell.position;
       const to = nextCell.position;
       const toPiece = nextCell.piece;
 
       this.$moveAnimationPosition.set({ fromPiece, from, to, toPiece });
-      // this._facade.move({ fromPiece, from, to, toPiece });
       return;
     }
+  }
+
+  onMoveAnimationStart(event: AnimationEvent) {
+    // if (event.toState === MoveAnimationState.Moving) {
+    //   this._facade.unselect();
+    // }
   }
 
   onMoveAnimationDone(event: AnimationEvent) {
@@ -110,5 +105,16 @@ export class GameBoardComponent implements OnInit {
       this.$moveAnimationPosition.set(null);
       this._facade.move(move);
     }
+  }
+
+  private canSelectSquare(cell: Cell) {
+    const turn = this._facade.$turn();
+    return cell.piece != null && cell.piece.color === turn;
+  }
+
+  private canMoveSquare(cell: Cell) {
+    const selectedId = this._facade.$selectedId();
+    const moveRangeIds = this._facade.$moveRangeIds();
+    return selectedId !== null && moveRangeIds.includes(cell.id);
   }
 }

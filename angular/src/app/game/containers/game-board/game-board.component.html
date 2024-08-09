@@ -18,7 +18,7 @@
           <button
             [class.board__square--black]="(idy - idx) % 2 === 0"
             [class.board__square--selected]="
-              cell.id === $selectedId() && $moveAnimationState() !== 'moving'
+              cell.id === $selectedId() && $moveAnimationPosition() === null
             "
             [class.board__square--capturable]="
               $moveRangeIds().includes(cell.id) &&
@@ -33,14 +33,13 @@
                   value: cell.id === $selectedId() && $moveAnimationState(),
                   params: $moveAnimationTransform(),
                 }"
+                (@move.start)="onMoveAnimationStart($event)"
                 (@move.done)="onMoveAnimationDone($event)"
                 class="w-full h-full z-50">
                 <img [src]="cell.piece.asset" [alt]="cell.piece.asset" />
               </div>
             }
-            @if (
-              $moveRangeIds().includes(cell.id) && $moveAnimationState() !== "moving"
-            ) {
+            @if ($moveRangeIds().includes(cell.id) && $moveAnimationPosition() === null) {
               <div
                 class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black w-4 h-4 opacity-55"></div>
             }

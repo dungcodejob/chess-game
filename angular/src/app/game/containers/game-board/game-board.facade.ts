@@ -11,13 +11,14 @@ export class GameBoardFacade {
   readonly $boards = this._store.$boards;
   readonly $selectedId = this._store.$selectedId;
   readonly $moveRangeIds = this._store.$moveRangeIds;
+  readonly $squareSize = this._store.$squareSize;
   readonly $turn = this._gameFacade.$turn;
-  readonly $selectedPiece = computed(() => {
+  readonly $selectedCell = computed(() => {
     const id = this.$selectedId();
     if (id) {
       const { x, y } = Cell.idToPosition(id);
       const cell = this.$boards()[x][y];
-      return cell.piece;
+      return cell;
     }
 
     return null;
