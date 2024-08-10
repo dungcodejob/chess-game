@@ -87,4 +87,13 @@ export abstract class Piece {
   protected isMoveWithinBoard(position: Coords): boolean {
     return 0 <= position.x && position.x < 8 && 0 <= position.y && position.y < 8;
   }
+
+  move(move: Move, board: Cell[][]): void {
+    const { from, to } = move;
+    const fromCell = board[from.x][from.y];
+    const toCell = board[to.x][to.y];
+
+    fromCell.setPiece(null);
+    toCell.setPiece(move.fromPiece);
+  }
 }
