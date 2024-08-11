@@ -9,3 +9,5 @@ export * from "./pawn";
 export * from "./piece";
 export * from "./queen";
 export * from "./rook";
+
+export * from "./level.enum";

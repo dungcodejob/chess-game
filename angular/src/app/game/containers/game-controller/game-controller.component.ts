@@ -15,5 +15,5 @@ export class GameControllerComponent {
   private readonly _facade = inject(GameControllerFacade);
 
   $turn = this._facade.$turn;
-  $moves = this._facade.$moves;
+  $moveHistory = this._facade.$moveHistory;
 }

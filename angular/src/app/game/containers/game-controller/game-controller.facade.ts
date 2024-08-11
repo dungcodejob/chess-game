@@ -5,6 +5,6 @@ import { GameFacade } from "@play/data-access";
 export class GameControllerFacade {
   private readonly _store = inject(GameFacade);
 
-  $moves = this._store.$moves;
+  $moveHistory = this._store.$moveHistory;
   $turn = this._store.$turn;
 }

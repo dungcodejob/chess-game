@@ -1,5 +1,5 @@
 import { inject, Injectable, Injector } from "@angular/core";
-import { Move } from "@shared/models";
+import { CellId, Color, Level, Move } from "@shared/models";
 import { GameStore } from "./game.store";
 
 @Injectable()
@@ -7,13 +7,23 @@ export class GameFacade {
   private readonly _injector = inject(Injector);
   private readonly _store = inject(GameStore);
 
-  $turn = this._store.turn;
-  $fullMoveNumber = this._store.fullMoveNumber;
-  $moves = this._store.moves;
+  $boards = this._store.$boards;
+  $turn = this._store.$turn;
+  $fullMoveNumber = this._store.$fullMoveNumber;
+  $selectedId = this._store.$selectedId;
+  $moveRangeIds = this._store.$moveRangeIds;
 
-  initialize() {}
+  $moveHistory = this._store.$moveHistory;
 
-  addMove(move: Move) {
-    this._store.addMove(move);
+  startGame(playerColor: Color, level: Level) {
+    this._store.startGame(playerColor, level);
+  }
+
+  select(id: CellId) {
+    this._store.select(id);
+  }
+
+  move(move: Move) {
+    this._store.move(move);
   }
 }

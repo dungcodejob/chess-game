@@ -1,5 +1,5 @@
 import { range } from "../utils";
-import { Cell } from "./cell";
+import { Cell, Move } from "./cell";
 import { Color } from "./color";
 import { Coords } from "./coords";
 import { ChessChar } from "./fen-char";
@@ -94,6 +94,6 @@ export abstract class Piece {
     const toCell = board[to.x][to.y];
 
     fromCell.setPiece(null);
-    toCell.setPiece(move.fromPiece);
+    toCell.setPiece(move.movePiece);
   }
 }

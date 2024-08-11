@@ -10,7 +10,6 @@ import { NgClass } from "@angular/common";
 import { Component, computed, DestroyRef, inject, OnInit, signal } from "@angular/core";
 import { Cell, Move } from "@shared/models";
 import { GameBoardFacade } from "./game-board.facade";
-import { GameBoardStore } from "./game-board.store";
 
 enum MoveAnimationState {
   Idle = "idle",
@@ -23,7 +22,7 @@ enum MoveAnimationState {
   imports: [NgClass],
   templateUrl: "./game-board.component.html",
   styleUrl: "./game-board.component.css",
-  providers: [GameBoardFacade, GameBoardStore],
+  providers: [GameBoardFacade],
   animations: [
     trigger("move", [
       state(MoveAnimationState.Idle, style({ transform: "translate(0, 0)" })),
@@ -48,6 +47,7 @@ export class GameBoardComponent implements OnInit {
   readonly $selectedId = this._facade.$selectedId;
   readonly $moveRangeIds = this._facade.$moveRangeIds;
   readonly $turn = this._facade.$turn;
+  readonly $squareSize = signal(64);
 
   readonly $moveAnimationPosition = signal<Move | null>(null);
   readonly $moveAnimationState = computed(() =>
@@ -58,8 +58,8 @@ export class GameBoardComponent implements OnInit {
   readonly $moveAnimationTransform = computed(() => {
     const move = this.$moveAnimationPosition();
     if (move) {
-      const y = (move.to.x - move.from.x) * 64;
-      const x = (move.to.y - move.from.y) * 64;
+      const y = (move.to.x - move.from.x) * this.$squareSize();
+      const x = (move.to.y - move.from.y) * this.$squareSize();
 
       return {
         x,
@@ -70,9 +70,7 @@ export class GameBoardComponent implements OnInit {
     return { x: 0, y: 0 };
   });
 
-  ngOnInit(): void {
-    this._facade.initialize();
-  }
+  ngOnInit(): void {}
   onCellClick(nextCell: Cell) {
     const canSelectSquare = this.canSelectSquare(nextCell);
     if (canSelectSquare) {
@@ -88,7 +86,12 @@ export class GameBoardComponent implements OnInit {
       const to = nextCell.position;
       const toPiece = nextCell.piece;
 
-      this.$moveAnimationPosition.set({ fromPiece, from, to, toPiece });
+      this.$moveAnimationPosition.set({
+        movePiece: fromPiece,
+        from,
+        to,
+        capturedPiece: toPiece,
+      });
       return;
     }
   }

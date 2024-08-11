@@ -2,8 +2,8 @@ import { Coords } from "./coords";
 import { Piece } from "./piece";
 
 export interface Move {
-  fromPiece: Piece;
-  toPiece: Piece | null;
+  movePiece: Piece;
+  capturedPiece: Piece | null;
   from: Coords;
   to: Coords;
 }
